@@ -173,13 +173,13 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
 
         document.getElementById("title_length").innerText = data.title_length || 0;
         document.getElementById("word_count").innerText = data.word_count || 0;
-        document.getElementById("meta_desc_length").innerText = data.meta_length || 0;
+        document.getElementById("meta_desc_length").innerText = data.meta_desc_length || 0;
         document.getElementById("image_count").innerText = data.image_count || 0;
     
         // Renk değişimleri (Yeşil / Sarı / Kırmızı)
         updateCardColor("title_length", data.title_length, 50, 60);
         updateCardColor("word_count", data.word_count, 300, 500);
-        updateCardColor("meta_desc_length", data.meta_length, 150, 160);
+        updateCardColor("meta_desc_length", data.meta_desc_length, 150, 160);
         updateCardColor("image_count", data.image_count, 1, 5);
     
     
