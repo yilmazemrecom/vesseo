@@ -4,17 +4,16 @@
 
 {% block content %}
 <div class="container-fluid mt-4">
-    <!-- Üst Menü Çubuğu -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm rounded-4 p-3">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#">Veseo - Haber SEO Analiz</a>
-        </div>
-    </nav>
-
+    <div class="text-center mb-4">
+        <h2 class="display-5 fw-bold">
+            🚀 Seo Analiz
+        </h2>
+        <p class="lead text-muted">Haber sitenizdeki yazınızın SEO durumunu kontrol edin!</p>
+    </div>
     <!-- URL Giriş Alanı -->
     <div class="card shadow-lg border-0 rounded-4 p-4 my-4 animate-fade-in">
         <form method="post" class="d-flex">
-            <input type="text" id="url" name="url" class="form-control form-control-lg rounded-pill me-2 shadow-sm" placeholder="Analiz edilecek URL" required>
+            <input type="text" id="url" name="url" class="form-control form-control-lg rounded-pill me-2 shadow-sm" placeholder="Analiz edilecek URL Örn: site.com/seonun-onemi-nedir" required>
             <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">🔍 Analiz Et</button>
         </form>
     </div>

@@ -38,7 +38,7 @@ class CustomUploadAdapter {
                 const data = new FormData();
                 data.append("file", file);
 
-                fetch("/api/upload-image/", {
+                fetch("/upload-image/", {
                     method: "POST",
                     body: data
                 })
@@ -82,7 +82,7 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
     formData.append("meta_desc", metaDesc);
     formData.append("content", content);
 
-    fetch("/api/content-analysis/", {
+    fetch("/content-analysis/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formData.toString()

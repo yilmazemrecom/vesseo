@@ -9,7 +9,8 @@ from app.analysis import analyze_url
 from app.content_analysis import router as content_analysis_router
 from fastapi.middleware.cors import CORSMiddleware
 import logging
-
+from app import search_analysis
+from fastapi.responses import HTMLResponse
 
 
 app = FastAPI()
@@ -21,7 +22,8 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
 
 
-app.include_router(content_analysis_router, prefix="/api")
+app.include_router(content_analysis_router)
+app.include_router(search_analysis.router)
 
 # 📌 CORS Middleware
 app.add_middleware(
@@ -82,6 +84,7 @@ async def analyze(request: Request, url: str = Form(None)):
 @app.get("/content-analysis")
 async def content_analysis_page(request: Request):
     return templates.TemplateResponse("content_analysis.html", {"request": request})
+
 
 
 if __name__ == "__main__":

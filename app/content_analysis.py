@@ -157,7 +157,7 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
     h1_count = content.count("<h1>")
     h2_count = content.count("<h2>")
     h3_count = content.count("<h3>")
-    image_count = content.count("<img")
+
     alt_analysis = check_alt_tags(content)
 
     # 📌 İçerikteki tüm görselleri al
@@ -179,6 +179,8 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
                 "file_name": img_filename,
                 "error": "Görsel sunucuda bulunamadı!"
             })
+
+        
 
     recommendations = []
     successes = []
@@ -224,6 +226,7 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
         "recommendations": recommendations,
         "successes": successes,
         "image_analysis": image_analysis_results,
-        "image_count": image_count
+        "image_count" : len(img_urls)
+
         
     }

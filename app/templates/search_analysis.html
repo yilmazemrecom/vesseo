@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="display-5 fw-bold">
+            🚀 Search Console Analizi
+        </h2>
+        <p class="lead text-muted">Google Search Console'dan indirdiğiniz Excel (.xlsx) dosyasını yükleyerek, web sitenizin SEO performansını detaylı analiz edin.</p>
+    </div>
+
+    <div class="card shadow-lg rounded-4 p-4 mb-5 bg-light animate-fade-in">
+        <form action="/search_analysis" method="post" enctype="multipart/form-data">
+            <div class="input-group">
+                <input type="file" name="file" accept=".xlsx" class="form-control form-control-lg rounded-start-3" required>
+                <button type="submit" class="btn btn-primary btn-lg rounded-end-3">
+                    📈 Analiz Et
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="text-center text-muted small">
+        <p>
+          📌 Excel dosyasını <strong>Google Search Console > Performans > Dışa Aktar > Excel (.xlsx)</strong> yolunu takip ederek indirebilirsiniz.
+        </p>
+      </div>
+      
+    {% if analysis %}
+    <div class="row text-center mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm rounded-3 bg-success text-white py-3">
+                <h5>Toplam Tıklama</h5>
+                <h2>{{ analysis.total_clicks }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm rounded-3 bg-info text-white py-3">
+                <h5>Toplam Gösterim</h5>
+                <h2>{{ analysis.total_impressions }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm rounded-3 bg-warning text-dark py-3">
+                <h5>Ortalama TO (%)</h5>
+                <h2>{{ analysis.average_ctr }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm rounded-3 bg-secondary text-white py-3">
+                <h5>Ortalama Pozisyon</h5>
+                <h2>{{ analysis.average_position }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            🔥 <strong>En Popüler 10 Arama Sorgusu</strong>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Sorgu</th>
+                        <th>Tıklamalar</th>
+                        <th>Gösterimler</th>
+                        <th>TO (%)</th>
+                        <th>Pozisyon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for query in analysis.top_queries %}
+                    <tr>
+                        <td>{{ query['En çok yapılan sorgular'] }}</td>
+                        <td>{{ query['Tıklamalar'] }}</td>
+                        <td>{{ query['Gösterimler'] }}</td>
+                        <td>{{ (query['TO']*100)|round(2) }}</td>
+                        <td>{{ query['Pozisyon'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if analysis.low_ctr_queries %}
+    <div class="card shadow-sm rounded-4 mt-4">
+        <div class="card-header bg-danger text-white rounded-top-4">
+            ⚠️ <strong>Düşük Tıklama Oranlı Sorgular (Önemli)</strong>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Sorgu</th>
+                        <th>Tıklamalar</th>
+                        <th>Gösterimler</th>
+                        <th>TO (%)</th>
+                        <th>Pozisyon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for query in analysis.low_ctr_queries %}
+                    <tr>
+                        <td>{{ query['En çok yapılan sorgular'] }}</td>
+                        <td>{{ query['Tıklamalar'] }}</td>
+                        <td>{{ query['Gösterimler'] }}</td>
+                        <td>{{ (query['TO']*100)|round(2) }}</td>
+                        <td>{{ query['Pozisyon'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <small class="text-muted">Bu sorguların meta açıklamaları ve başlıklarını SEO açısından gözden geçirmeniz önerilir.</small>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
+{% endblock %}
