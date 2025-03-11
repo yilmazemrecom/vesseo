@@ -108,9 +108,9 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
         if (data.alt_analysis.status === "Tamam") {
             document.getElementById("successes").innerHTML += `<li class="text-success">✅ Tüm görseller ALT metnine sahip!</li>`;
         }
-        else
-        {
-            document.getElementById("successes").innerHTML += `<li class="text-warning">⚠️ İyileştirme önerilerini ve hatalarınızı kontrol ediniz!</li>`;
+
+        if (document.getElementById("successes").innerHTML.trim() === "") {
+            document.getElementById("successes").innerHTML = `<li class="text-warning">⚠️ İyileştirme önerilerini ve hatalarınızı kontrol ediniz!</li>`;
         }
 
         // 📌 İyileştirme Önerileri
