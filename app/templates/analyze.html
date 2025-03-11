@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}SEO Analizi - Veseo{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Üst Menü Çubuğu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm rounded-4 p-3">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Veseo - Haber SEO Analiz</a>
+        </div>
+    </nav>
+
+    <!-- URL Giriş Alanı -->
+    <div class="card shadow-lg border-0 rounded-4 p-4 my-4 animate-fade-in">
+        <form method="post" class="d-flex">
+            <input type="text" id="url" name="url" class="form-control form-control-lg rounded-pill me-2 shadow-sm" placeholder="Analiz edilecek URL" required>
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">🔍 Analiz Et</button>
+        </form>
+    </div>
+
+    {% if url %}
+    <div class="mt-4">
+        <!-- SEO Metrikleri Kartları -->
+        <div class="row g-4 text-center">
+            {% set metrics = [
+                {"label": "Başlık Uzunluğu", "value": seo_analysis.title_length},
+                {"label": "Kelime Sayısı", "value": seo_analysis.word_count},
+                {"label": "Meta Açıklaması", "value": seo_analysis.meta_desc_length},
+                {"label": "Görseller", "value": seo_analysis.image_count},
+                {"label": "İç Linkler", "value": seo_analysis.internal_link_count},
+                {"label": "Dış Linkler", "value": seo_analysis.external_link_count},
+                {"label": "H1 Başlık Sayısı", "value": seo_analysis.h1_count},
+                {"label": "H2 Başlık Sayısı", "value": seo_analysis.h2_count}
+            ] %}
+
+            {% for metric in metrics %}
+            <div class="col-md-3">
+                <div class="card shadow-lg border-0 p-4 animate-slide-up">
+                    <h6 class="fw-bold">{{ metric.label }}</h6>
+                    <p class="display-6 fw-bold" style="color: {% if metric.value == 0 %}#dc3545{% elif metric.value < 3 %}#ffc107{% else %}#28a745{% endif %};">
+                        {{ metric.value }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <!-- SEO Önerileri Alanı -->
+        {% if recommendations %}
+        <div class="mt-5">
+            <h4 class="fw-bold">🚀 SEO Önerileri</h4>
+            <div class="card shadow-lg border-0 rounded-4 p-4 animate-fade-in">
+                <ul class="list-unstyled">
+                    {% for rec in recommendations %}
+                    <li class="p-3 mb-2 rounded-3 shadow-sm" style="border-left: 5px solid {% if 'kötü' in rec %}#dc3545{% elif 'geliştirilebilir' in rec %}#ffc107{% else %}#28a745{% endif %}; background-color: #f8f9fa;">
+                        <strong>{% if 'kötü' in rec %}🔴 {% elif 'geliştirilebilir' in rec %}🟡 {% else %}🟢 {% endif %} {{ rec.split(':')[0] }}</strong><br>
+                        <span class="text-muted">{{ rec.split(':')[1] }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Meta Etiketleri Kartı -->
+        <div class="mt-5">
+            <h4 class="fw-bold">📌 Meta Etiketleri</h4>
+            <div class="card shadow-lg border-0 rounded-4 p-4 animate-fade-in">
+                <div class="mb-2"><strong class="text-primary">Title:</strong> {{ title }}</div>
+                <div class="mb-2"><strong class="text-primary">Description:</strong> {{ meta_desc }}</div>
+                <div class="mb-2"><strong class="text-primary">Keywords:</strong> {% if keywords %}{{ keywords }}{% else %}Bulunamadı{% endif %}</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

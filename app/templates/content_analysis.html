@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}İç SEO Analizi - Veseo{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center fw-bold text-primary">🚀 İç SEO Analizi</h2>
+
+    <!-- İçerik Giriş Alanı -->
+    <div class="card shadow-sm border-0 rounded-4 p-4 my-4">
+        <form id="seoForm" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">📌 H1 Yazı Başlığı</label>
+                    <input type="text" id="title" class="form-control" placeholder="SEO uyumlu bir başlık girin...">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">📝 Meta Açıklaması</label>
+                    <input type="text" id="meta_desc" class="form-control" placeholder="Sayfanızı açıklayan kısa bir meta açıklaması yazın...">
+                </div>
+            </div>
+        
+            <label class="form-label fw-bold">📄 İçerik</label>
+            <textarea id="editor"></textarea>
+        
+            <div class="mt-3">
+                <button type="button" id="analyzeBtn" class="btn btn-primary btn-lg w-100">🔍 SEO Analizi Yap</button>
+            </div>
+        </form>     
+    </div>
+
+    <div id="analysisResult" class="d-none">
+        <h3 class="fw-bold text-center text-success">🚀 Analiz Sonucu</h3>
+    
+        <div class="row">
+            <!-- 🎯 İyi Yapılmışlar -->
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-4 p-3">
+                    <h5 class="fw-bold text-success">🌟 Başarılar</h5>
+                    <ul id="successes" class="list-unstyled"></ul>
+                </div>
+            </div>
+    
+            <!-- 📌 İyileştirme Önerileri -->
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-4 p-3">
+                    <h5 class="fw-bold text-info">📌 İyileştirme Önerileri</h5>
+                    <ul id="suggestions" class="list-unstyled"></ul>
+                </div>
+            </div>
+    
+            <!-- ⚠️ Yapılması Gerekenler -->
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-4 p-3">
+                    <h5 class="fw-bold text-warning">⚠️ Yapılması Gerekenler</h5>
+                    <ul id="improvements" class="list-unstyled"></ul>
+                </div>
+            </div>
+    
+            <!-- ❌ Hatalar -->
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-4 p-3">
+                    <h5 class="fw-bold text-danger">❌ Hatalar</h5>
+                    <ul id="errors" class="list-unstyled"></ul>
+                </div>
+            </div>
+    
+            <!-- 🖼️ ALT Metni Uyarısı -->
+            <div id="altWarning" class="alert alert-warning d-none mt-3">
+                <h5 class="fw-bold">⚠️ Görsel ALT Metni Uyarısı</h5>
+                <ul id="altWarningList" class="list-unstyled"></ul>
+            </div>
+
+            <!-- Görsel Analiz Sonuçları -->
+            <div id="imageResults" class="mt-3"></div>
+
+            
+        </div>
+    </div>
+    
+<!-- CKEditor 5 -->
+<script src="{{ url_for('static', path='/js/ckeditor.js') }}"></script>
+<script src="{{ url_for('static', path='/js/ckeditor_config.js') }}"></script>
+
+{% endblock %}
