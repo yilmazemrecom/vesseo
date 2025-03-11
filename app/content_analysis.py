@@ -147,7 +147,7 @@ def extract_images_from_content(content):
 
 @router.post("/content-analysis/")
 def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content: str = Form(...)):
-    """İçeriği analiz eder ve eksik ALT metinleri kontrol eder."""
+    """İçeriği analiz eder"""
 
     print(f"✅ Gelen Başlık: {title}")
     print(f"✅ Gelen Meta Açıklaması: {meta_desc}")
@@ -157,7 +157,7 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
     h1_count = content.count("<h1>")
     h2_count = content.count("<h2>")
     h3_count = content.count("<h3>")
-
+    image_count = content.count("<img")
     alt_analysis = check_alt_tags(content)
 
     # 📌 İçerikteki tüm görselleri al
@@ -223,6 +223,7 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
         "alt_analysis": alt_analysis,
         "recommendations": recommendations,
         "successes": successes,
-        "image_analysis": image_analysis_results
+        "image_analysis": image_analysis_results,
+        "image_count": image_count
         
     }

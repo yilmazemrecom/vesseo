@@ -31,45 +31,84 @@
 
     <div id="analysisResult" class="d-none">
         <h3 class="fw-bold text-center text-success">🚀 Analiz Sonucu</h3>
-    
-        <div class="row">
-            <!-- 🎯 İyi Yapılmışlar -->
-            <div class="col">
-                <div class="card shadow-sm border-0 rounded-4 p-3">
-                    <h5 class="fw-bold text-success">🌟 Başarılar</h5>
-                    <ul id="successes" class="list-unstyled"></ul>
+        <!--Counter-->
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col">
+                    <div class="card text-center shadow h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Başlık Uzunluğu</h5>
+                            <h2 class="text-danger" id="title_length">3</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center shadow h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Kelime Sayısı</h5>
+                            <h2 class="text-danger" id="word_count">3</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center shadow h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Meta Açıklaması</h5>
+                            <h2 class="text-success" id="meta_desc_length">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center shadow h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Görseller</h5>
+                            <h2 class="text-danger" id="image_count">0</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
-    
-            <!-- 📌 İyileştirme Önerileri -->
-            <div class="col">
-                <div class="card shadow-sm border-0 rounded-4 p-3">
-                    <h5 class="fw-bold text-info">📌 İyileştirme Önerileri</h5>
-                    <ul id="suggestions" class="list-unstyled"></ul>
+        </div>
+        <!--öneriler-->
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-4 g-4 align-items-stretch">
+                <div class="col">
+                    <div class="card shadow border-0 rounded-4 p-3 h-100">
+                        <h5 class="fw-bold text-success">🌟 Başarılar</h5>
+                        <ul id="successes" class="list-unstyled">
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow border-0 rounded-4 p-3 h-100">
+                        <h5 class="fw-bold text-info">📌 İyileştirme Önerileri</h5>
+                        <ul id="suggestions" class="list-unstyled">
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow border-0 rounded-4 p-3 h-100">
+                        <h5 class="fw-bold text-warning">⚠️ Yapılması Gerekenler</h5>
+                        <ul id="improvements" class="list-unstyled">
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow border-0 rounded-4 p-3 h-100">
+                        <h5 class="fw-bold text-danger">❌ Hatalar</h5>
+                        <ul id="errors" class="list-unstyled">
+                        </ul>
+                    </div>
                 </div>
             </div>
-    
-            <!-- ⚠️ Yapılması Gerekenler -->
-            <div class="col">
-                <div class="card shadow-sm border-0 rounded-4 p-3">
-                    <h5 class="fw-bold text-warning">⚠️ Yapılması Gerekenler</h5>
-                    <ul id="improvements" class="list-unstyled"></ul>
-                </div>
-            </div>
-    
-            <!-- ❌ Hatalar -->
-            <div class="col">
-                <div class="card shadow-sm border-0 rounded-4 p-3">
-                    <h5 class="fw-bold text-danger">❌ Hatalar</h5>
-                    <ul id="errors" class="list-unstyled"></ul>
-                </div>
-            </div>
+        </div>
     
             <!-- 🖼️ ALT Metni Uyarısı -->
             <div id="altWarning" class="alert alert-warning d-none mt-3">
                 <h5 class="fw-bold">⚠️ Görsel ALT Metni Uyarısı</h5>
                 <ul id="altWarningList" class="list-unstyled"></ul>
             </div>
+
+
 
             <!-- Görsel Analiz Sonuçları -->
             <div id="imageResults" class="mt-3"></div>

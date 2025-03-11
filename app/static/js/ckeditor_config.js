@@ -8,7 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     ClassicEditor
         .create(editorElement, {
-            extraPlugins: [CustomUploadAdapterPlugin]
+            extraPlugins: [CustomUploadAdapterPlugin],
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading2', view: 'h3', title: 'Heading 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h4', title: 'Heading 3', class: 'ck-heading_heading3' }
+                ]
+            }
         })
         .then(editor => {
             window.editorInstance = editor;
@@ -101,6 +108,10 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
         if (data.alt_analysis.status === "Tamam") {
             document.getElementById("successes").innerHTML += `<li class="text-success">✅ Tüm görseller ALT metnine sahip!</li>`;
         }
+        else
+        {
+            document.getElementById("successes").innerHTML += `<li class="text-warning">⚠️ İyileştirme önerilerini ve hatalarınızı kontrol ediniz!</li>`;
+        }
 
         // 📌 İyileştirme Önerileri
         const suggestionsList = data.recommendations
@@ -160,11 +171,38 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
             imageResultsContainer.innerHTML += resultHTML;
         });
 
-
-
+        document.getElementById("title_length").innerText = data.title_length || 0;
+        document.getElementById("word_count").innerText = data.word_count || 0;
+        document.getElementById("meta_desc_length").innerText = data.meta_length || 0;
+        document.getElementById("image_count").innerText = data.image_count || 0;
+    
+        // Renk değişimleri (Yeşil / Sarı / Kırmızı)
+        updateCardColor("title_length", data.title_length, 50, 60);
+        updateCardColor("word_count", data.word_count, 300, 500);
+        updateCardColor("meta_desc_length", data.meta_length, 150, 160);
+        updateCardColor("image_count", data.image_count, 1, 5);
+    
+    
     })
     .catch(error => {
         console.error("❌ SEO Analizi yapılırken hata oluştu:", error);
         document.getElementById("errors").innerHTML = `<li class="text-danger">🚨 Sunucu hatası! Lütfen daha sonra tekrar deneyin.</li>`;
     });
 });
+
+function updateCardColor(id, value, min, max) {
+    const element = document.getElementById(id);
+    if (value < min) {
+        element.classList.remove("text-success", "text-warning");
+        element.classList.add("text-danger");
+    } else if (value > max) {
+        element.classList.remove("text-success", "text-danger");
+        element.classList.add("text-warning");
+    } else {
+        element.classList.remove("text-danger", "text-warning");
+        element.classList.add("text-success");
+    }
+}
+
+
+
