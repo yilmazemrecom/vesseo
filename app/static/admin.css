@@ -1,0 +1,79 @@
+        /* 🟢 Sidebar Stili */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(135deg, #1E1E2F, #252542);
+            color: white;
+            position: fixed;
+            padding: 20px;
+            transition: all 0.3s;
+            box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .sidebar .active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar .logout {
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+        .sidebar .logout:hover {
+            background-color: rgba(255, 77, 77, 0.2);
+        }
+
+        /* 🟢 İçerik Alanı */
+        main {
+            margin-left: 260px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .admin-header h2 {
+            color: #34495E;
+            font-weight: bold;
+        }
+
+        /* 🟢 Dashboard Kartları */
+        .dashboard-card {
+            border: none;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 500px;  /* Grafiğin maksimum genişliği */
+            height: 300px;      /* Sabit bir yükseklik verelim */
+            margin: 0 auto;     /* Ortalamak için */
+        }
+        

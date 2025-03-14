@@ -90,3 +90,21 @@ body {
     box-shadow: 0 10px 20px rgba(0,123,255,0.3);
 }
 
+/* İçerik Görsellerini Responsive Yap */
+.content-container img {
+    max-width: 100%;  /* Görseller container dışına taşmasın */
+    height: auto;  /* Oranını koruyarak yükseklik ayarla */
+    display: block;  /* Inline yerine block yap */
+    margin: 10px auto;  /* Ortala ve biraz boşluk bırak */
+    border-radius: 8px;  /* Hafif köşeleri yuvarla */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+.dropdown-menu {
+    min-width: 180px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}

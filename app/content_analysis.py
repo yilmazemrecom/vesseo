@@ -6,6 +6,15 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Background
 from fastapi.responses import JSONResponse
 import unicodedata
 import time
+from fastapi import Depends
+from app.auth import get_current_user
+from app.basic import counter
+from fastapi import Request
+import json
+import uuid
+from app.config import UPLOAD_DIR
+from app.config import get_db
+from datetime import datetime
 
 
 router = APIRouter()
@@ -17,44 +26,48 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)  # 📌 Eğer yoksa klasörü oluştur
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 
 
+router = APIRouter()
+
 # 📌 Görsel Yükleme ve Analiz
 @router.post("/upload-image/")
-async def upload_image(file: UploadFile = File(...), background_tasks: BackgroundTasks = BackgroundTasks()):
+async def upload_image(file: UploadFile = File(...)):
     """CKEditor'den gelen dosyayı alıp sunucuya kaydeder ve analiz eder."""
     try:
         if not file:
             raise HTTPException(status_code=400, detail="Dosya yüklenemedi!")
 
         file_ext = os.path.splitext(file.filename)[1].lower()
-        safe_filename = file.filename.replace(" ", "_")
-        file_path = os.path.join(UPLOAD_DIR, safe_filename)
 
         if file_ext not in ALLOWED_EXTENSIONS:
             raise HTTPException(status_code=400, detail="Bu dosya formatı desteklenmiyor!")
 
+        # 📌 Bugünün tarihini al ve klasör ismini oluştur
+        today = datetime.now()
+        year = today.strftime("%Y")  # Yıl (2025)
+        month = today.strftime("%m")  # Ay (03)
+        day = today.strftime("%d")  # Gün (13)
+
+        # 📌 Yıl, Ay ve Gün klasörlerini oluştur
+        upload_path = os.path.join(UPLOAD_DIR, year, month, day)
+        os.makedirs(upload_path, exist_ok=True)  # Eğer klasör yoksa oluştur
+
+        # 📌 Benzersiz dosya adı oluştur (UUID)
+        unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+        file_path = os.path.join(upload_path, unique_filename)
+
+        # 📌 Dosyayı kaydet
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # 📌 Dosyanın yüklenme zamanını kaydet
-        timestamp_path = file_path + ".timestamp"
-        with open(timestamp_path, "w") as ts_file:
-            ts_file.write(str(time.time()))
-
-        # 📌 Arka planda eski dosyaları silme işlemini çalıştır
-        background_tasks.add_task(delete_old_files, UPLOAD_DIR, 24 * 60 * 60)  # 24 saat sonra sil
-
-        # 📌 Görsel Analizi Yap
-        image_info = analyze_image(file_path)
-
         return JSONResponse(status_code=200, content={
             "uploaded": 1,
-            "fileName": safe_filename,
-            "url": f"/uploads/{safe_filename}",
-            **image_info  # 📌 Görsel analiz bilgilerini ekliyoruz
+            "fileName": unique_filename,
+            "url": f"/uploads/{year}/{month}/{day}/{unique_filename}"  # 🔗 Doğru URL'yi döndür
         })
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Dosya yüklenirken hata oluştu: {str(e)}")
+
 
 def delete_old_files(upload_dir, max_age_seconds):
     """Belirli bir süreden eski olan görselleri otomatik sil."""
@@ -145,10 +158,16 @@ def extract_images_from_content(content):
     return img_urls
 
 
-@router.post("/content-analysis/")
-def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content: str = Form(...)):
-    """İçeriği analiz eder"""
 
+
+@router.post("/content-analysis/")
+def analyze_content(request: Request, title: str = Form(...), meta_desc: str = Form(...), content: str = Form(...)):
+    """İçeriği analiz eder"""
+    user = get_current_user(request)  # ✅ Kullanıcıyı burada çekiyoruz
+    if not isinstance(user, str):  # Eğer kullanıcı bilgisi çekilemezse hata dön
+        raise HTTPException(status_code=401, detail="Kimlik doğrulama başarısız")
+
+    print(f"✅ Kullanıcı: {user}")
     print(f"✅ Gelen Başlık: {title}")
     print(f"✅ Gelen Meta Açıklaması: {meta_desc}")
     print(f"✅ Gelen İçerik: {content}")
@@ -157,8 +176,10 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
     h1_count = content.count("<h1>")
     h2_count = content.count("<h2>")
     h3_count = content.count("<h3>")
-
+    img_urls = extract_images_from_content(content)
     alt_analysis = check_alt_tags(content)
+    recommendations = []
+    successes = []
 
     # 📌 İçerikteki tüm görselleri al
     img_urls = extract_images_from_content(content)
@@ -180,12 +201,8 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
                 "error": "Görsel sunucuda bulunamadı!"
             })
 
-        
 
-    recommendations = []
-    successes = []
-
-    # 🎯 Başlık Kontrolü (Ne çok kısa ne çok uzun olmalı!)
+    # 🎯 Başlık Kontrolü
     if len(title) < 50:
         recommendations.append("Başlık çok kısa. En az 50 karakter olmalıdır.")
     elif len(title) > 60:
@@ -193,7 +210,7 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
     else:
         successes.append("Başlık uzunluğu ideal! ✅")
 
-    # 🎯 Meta Açıklaması Kontrolü (Ne çok kısa ne çok uzun olmalı!)
+    # 🎯 Meta Açıklaması Kontrolü
     if len(meta_desc) < 120:
         recommendations.append("Meta açıklaması çok kısa. En az 120 karakter olmalıdır.")
     elif len(meta_desc) > 160:
@@ -215,18 +232,55 @@ def analyze_content(title: str = Form(...), meta_desc: str = Form(...), content:
     else:
         successes.append("H2 başlık sayısı ideal! ✅")
 
-    return {
-        "title_length": len(title),
-        "meta_desc_length": len(meta_desc),
+    # 📌 Analiz sonucunu JSON formatına çevir
+    analysis_result = {
         "word_count": word_count,
         "h1_count": h1_count,
         "h2_count": h2_count,
         "h3_count": h3_count,
-        "alt_analysis": alt_analysis,
+        "image_count": len(img_urls),
         "recommendations": recommendations,
-        "successes": successes,
-        "image_analysis": image_analysis_results,
-        "image_count" : len(img_urls)
-
-        
+        "successes": successes
     }
+
+    # 📌 Analizi veritabanına kaydet
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        INSERT INTO user_analyses (username, title, meta_desc, content, word_count, h1_count, h2_count, h3_count, image_count, analysis_result)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """,
+        (user, title, meta_desc, content, word_count, h1_count, h2_count, h3_count, len(img_urls), json.dumps(analysis_result))
+    )
+    conn.commit()
+    conn.close()
+
+    counter(user)  # Kullanıcının analiz sayısını artır
+
+    try:
+        response_data = {
+            "title_length": len(title),
+            "meta_desc_length": len(meta_desc),
+            "word_count": word_count,
+            "h1_count": h1_count,
+            "h2_count": h2_count,
+            "h3_count": h3_count,
+            "alt_analysis": alt_analysis,
+            "recommendations": recommendations,
+            "successes": successes,
+            "image_analysis": image_analysis_results,
+            "image_count" : len(img_urls)
+            }
+
+        return JSONResponse(content=response_data, status_code=200)
+
+    except Exception as e:
+        print(f"❌ SEO Analizi sırasında hata oluştu: {str(e)}")
+        return JSONResponse(
+            content={
+                "status": "error",
+                "message": f"SEO Analizi sırasında hata oluştu: {str(e)}"
+            },
+            status_code=500
+        )

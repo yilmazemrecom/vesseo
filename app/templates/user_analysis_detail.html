@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- 📄 Makale İçeriği -->
+        <div class="col-lg-8">
+            <article class="card shadow-sm p-4 border-0">
+                <h1 class="fw-bold text-dark">{{ analysis.title }}</h1>
+                <p class="text-muted">
+                    <i class="bi bi-calendar"></i> <strong>Tarih:</strong> {{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </p>
+                <p class="lead text-secondary"><strong>📌 Meta Açıklaması:</strong> {{ analysis.meta_desc }}</p>
+                
+                <!-- 📄 İçerik -->
+                <div class="border p-4 bg-light rounded content-container shadow-sm">
+                    {{ analysis.content | safe }}
+                </div>
+            </article>
+        </div>
+
+        <!-- 🔍 SEO Analiz Sonuçları -->
+        <div class="col-lg-4">
+            <h4 class="text-primary mb-3"><i class="bi bi-bar-chart"></i> SEO Analiz Sonuçları</h4>
+
+            <div class="card text-white bg-primary mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-file-text"></i> Kelime Sayısı</h5>
+                    <p class="card-text fs-3 fw-bold">{{ analysis.word_count }}</p>
+                </div>
+            </div>
+
+            <div class="card text-white bg-info mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-type-h2"></i> H2 Başlık Sayısı</h5>
+                    <p class="card-text fs-3 fw-bold">{{ analysis.h2_count }}</p>
+                </div>
+            </div>
+
+            <div class="card text-white bg-warning mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-images"></i> Görsel Sayısı</h5>
+                    <p class="card-text fs-3 fw-bold">{{ analysis.image_count }}</p>
+                </div>
+            </div>
+
+            <!-- ⚠️ SEO Uyarıları -->
+            {% if analysis.word_count < 300 or analysis.h2_count < 2 or analysis.image_count == 0 %}
+            <div class="card text-white bg-danger mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-exclamation-triangle"></i> SEO Uyarıları</h5>
+                    <ul class="card-text">
+                        {% if analysis.word_count < 300 %}
+                        <li>⚠️ İçerik çok kısa! En az 300 kelime olmalı.</li>
+                        {% endif %}
+                        {% if analysis.h2_count < 2 %}
+                        <li>⚠️ Yeterli H2 başlık eklenmeli.</li>
+                        {% endif %}
+                        {% if analysis.image_count == 0 %}
+                        <li>⚠️ İçeriğinizde hiç görsel bulunmuyor!</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="/user-analyses" class="btn btn-outline-secondary mt-4">
+        <i class="bi bi-arrow-left"></i> Geri Dön
+    </a>
+</div>
+{% endblock %}

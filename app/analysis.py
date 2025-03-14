@@ -1,17 +1,11 @@
+from fastapi import Request
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import re
 from app.config import SITE_CONFIGS
-
-# Özel yapılandırmalar (her siteye özel class'lar)
-SITE_CONFIGS = {
-    "sokgazetesi.com.tr": {
-        "title_class": "h2 fw-bold text-lg-start headline my-2",
-        "meta_desc_class": "lead text-lg-start text-dark my-2 description",
-        "content_class": "article-text container-padding"
-    }
-}
+from app.config import get_db
+from app.auth import get_current_user
 
 def generate_recommendations(seo_analysis):
     recommendations = []
@@ -46,6 +40,7 @@ def generate_recommendations(seo_analysis):
 
 def analyze_url(url):
     # Eğer URL şeması yoksa, HTTPS ekle
+
     if not url.startswith(("http://", "https://")):
         url = "https://" + url
 

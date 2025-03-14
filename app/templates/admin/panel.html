@@ -1,0 +1,144 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Admin Dashboard - Veseo{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-primary"><i class="bi bi-speedometer2"></i> Yönetim Paneli</h2>
+
+    <div class="row">
+        <!-- Genel Bilgiler -->
+        <div class="col-md-4">
+            <div class="card text-white bg-primary shadow-sm mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="bi bi-people"></i> Toplam Kullanıcı</h5>
+                    <p class="fs-3 fw-bold">{{ total_users }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning shadow-sm mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="bi bi-bar-chart"></i> Toplam Analiz</h5>
+                    <p class="fs-3 fw-bold">{{ total_analysis }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📊 Son Yapılan Analizler -->
+    <h4 class="text-secondary mt-4"><i class="bi bi-clock-history"></i> Son 5 Analiz</h4>
+    <div class="row">
+        {% if recent_analyses %}
+            {% for analysis in recent_analyses %}
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-3 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> {{ analysis.title }}</h5>
+                        <p class="text-muted">
+                            <i class="bi bi-person"></i> {{ analysis.username }} 
+                            <i class="bi bi-clock ms-2"></i> {{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </p>
+                        <p>
+                            <strong>Kelime Sayısı:</strong> {{ analysis.word_count }} | 
+                            <strong>Görseller:</strong> {{ analysis.image_count }}
+                        </p>
+                        <a href="/admin/analysis/{{ analysis.id }}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-eye"></i> Detay
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">Henüz analiz yapılmadı.</p>
+        {% endif %}
+    </div>
+
+    <!-- 📊 Grafik Alanı -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h4 class="text-secondary"><i class="bi bi-graph-up"></i> Son 7 Günlük Analiz Sayısı</h4>
+            <div class="chart-container">
+                <canvas id="weeklyAnalysisChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-secondary"><i class="bi bi-pie-chart"></i> Kullanıcı Bazlı Analiz Dağılımı</h4>
+            <div class="chart-container">
+                <canvas id="userAnalysisChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 📌 CSS (Grafik ve Kartlar için) -->
+<style>
+    .chart-container {
+        width: 100%;
+        max-width: 500px;
+        height: 300px;
+        margin: 0 auto;
+    }
+    .h-100 {
+        min-height: 150px; /* Kart yüksekliklerini eşitle */
+    }
+</style>
+
+<!-- 📌 JavaScript (Grafikler için) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Son 7 Günlük Analiz Grafiği
+        const ctx1 = document.getElementById("weeklyAnalysisChart").getContext("2d");
+        const weeklyLabels = {{ weekly_labels | tojson }};
+        const weeklyValues = {{ weekly_values | tojson }};
+
+        if (weeklyLabels.length > 0) {
+            new Chart(ctx1, {
+                type: "line",
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [{
+                        label: "Analiz Sayısı",
+                        data: weeklyValues,
+                        borderColor: "blue",
+                        backgroundColor: "rgba(0,0,255,0.2)",
+                        borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            });
+        } else {
+            document.getElementById("weeklyAnalysisChart").parentElement.innerHTML = 
+                "<p class='text-muted'>📉 Yeterli analiz verisi bulunmamaktadır.</p>";
+        }
+
+        // Kullanıcı Bazlı Analiz Dağılımı
+        const ctx2 = document.getElementById("userAnalysisChart").getContext("2d");
+        const userLabels = {{ user_labels | tojson }};
+        const userValues = {{ user_values | tojson }};
+
+        if (userLabels.length > 0) {
+            new Chart(ctx2, {
+                type: "doughnut",
+                data: {
+                    labels: userLabels,
+                    datasets: [{
+                        label: "Analiz Sayısı",
+                        data: userValues,
+                        backgroundColor: ["#007bff", "#ffcc00", "#28a745", "#dc3545", "#17a2b8"],
+                        hoverOffset: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom" } } }
+            });
+        } else {
+            document.getElementById("userAnalysisChart").parentElement.innerHTML = 
+                "<p class='text-muted'>📊 Kullanıcı bazlı analiz verisi bulunmamaktadır.</p>";
+        }
+    });
+</script>
+
+{% endblock %}

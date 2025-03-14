@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Kullanıcı Yönetimi - Veseo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary"><i class="bi bi-people"></i> Kullanıcı Yönetimi</h2>
+    <a href="/admin/users/add" class="btn btn-success mb-4">
+        <i class="bi bi-person-plus"></i> Yeni Kullanıcı Ekle
+    </a>
+
+    <table class="table table-bordered shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Kullanıcı Adı</th>
+                <th>E-Posta</th>
+                <th>Yetki</th>
+                <th>Yaptığı Analiz</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.is_admin %}
+                        <span class="badge bg-danger">Admin</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Kullanıcı</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.analysis_count }}</td>
+                <td>
+                    <a href="/admin/delete/{{ user.id }}" class="btn btn-sm btn-danger">Sil</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+    <!-- 📌 Pagination -->
+    <nav aria-label="Sayfalama">
+        <ul class="pagination justify-content-center mt-4">
+            {% if current_page is defined and current_page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="/admin/users?page={{ current_page - 1 }}&limit={{ limit }}">Önceki</a>
+            </li>
+            {% endif %}
+
+            {% for page in range(1, total_pages + 1) %}
+            <li class="page-item {% if page == current_page %}active{% endif %}">
+                <a class="page-link" href="/admin/users?page={{ page }}&limit={{ limit }}">{{ page }}</a>
+            </li>
+            {% endfor %}
+
+            {% if current_page is defined and current_page < total_pages %}
+            <li class="page-item">
+                <a class="page-link" href="/admin/users?page={{ current_page + 1 }}&limit={{ limit }}">Sonraki</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+{% endblock %}

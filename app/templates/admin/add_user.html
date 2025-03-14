@@ -1,0 +1,65 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Kullanıcı Ekle - Veseo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary"><i class="bi bi-person-plus"></i> Yeni Kullanıcı Ekle</h2>
+
+    <div class="card shadow-sm p-4">
+        <form method="POST" action="/admin/users/add">
+            <div class="mb-3">
+                <label for="username" class="form-label">Kullanıcı Adı</label>
+                <input type="text" id="username" name="username" class="form-control" required autocomplete="off">
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">E-Posta</label>
+                <input type="email" id="email" name="email" class="form-control" required autocomplete="off">
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label for="password" class="form-label">Şifre</label>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" class="form-control" required autocomplete="new-password">
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Yetki</label>
+                <select name="is_admin" class="form-select">
+                    <option value="0">Normal Kullanıcı</option>
+                    <option value="1">Admin</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Kullanıcı Ekle
+            </button>
+            <a href="/admin/users" class="btn btn-secondary">İptal</a>
+        </form>
+    </div>
+</div>
+
+<!-- 🆕 Şifre Göster/Gizle Scripti -->
+<script>
+    function togglePassword() {
+        const passwordField = document.getElementById("password");
+        const toggleIcon = document.getElementById("toggleIcon");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.remove("bi-eye-slash");
+            toggleIcon.classList.add("bi-eye");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.remove("bi-eye");
+            toggleIcon.classList.add("bi-eye-slash");
+        }
+    }
+</script>
+
+{% endblock %}

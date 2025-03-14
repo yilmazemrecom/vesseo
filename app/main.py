@@ -1,17 +1,20 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
-import requests
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+import logging
 from app.analysis import analyze_url
 from app.content_analysis import router as content_analysis_router
 from fastapi.middleware.cors import CORSMiddleware
-import logging
 from app import search_analysis
-from fastapi.responses import HTMLResponse
-
+from fastapi.responses import HTMLResponse, RedirectResponse
+from app.auth import router as auth_router
+from app.auth import get_current_user
+from app.admin import router as admin_router
+from app.config import db_config
+import mysql.connector
+from app.users import router as users_router
+from app.trends import router as trends_router
 
 app = FastAPI()
 logging.basicConfig(level=logging.DEBUG)
@@ -21,10 +24,15 @@ templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
 
-
 app.include_router(content_analysis_router)
 app.include_router(search_analysis.router)
+app.include_router(auth_router)
+app.include_router(admin_router)
+app.include_router(users_router)
+app.include_router(trends_router)
 
+def get_db():
+    return mysql.connector.connect(**db_config)
 # 📌 CORS Middleware
 app.add_middleware(
     CORSMiddleware,
@@ -34,13 +42,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.get("/")
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/login")
+async def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+
+# 🔒 **GİRİŞ GEREKTİREN SAYFALAR**
 @app.api_route("/analyze", methods=["GET", "POST"])
 async def analyze(request: Request, url: str = Form(None)):
+    user = get_current_user(request)
+    if isinstance(user, RedirectResponse):
+        return user
     if request.method == "GET":
         return templates.TemplateResponse("analyze.html", {
             "request": request,
@@ -65,6 +81,12 @@ async def analyze(request: Request, url: str = Form(None)):
         })
 
     analysis_result = analyze_url(url)
+    # Kullanıcının analiz sayısını artır
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET analysis_count = analysis_count + 1 WHERE username = %s", (user,))
+    conn.commit()
+    conn.close()
 
     return templates.TemplateResponse("analyze.html", {
         "request": request,
@@ -80,10 +102,20 @@ async def analyze(request: Request, url: str = Form(None)):
         "featured_image": analysis_result.get("featured_image", "")
     })
 
-
 @app.get("/content-analysis")
 async def content_analysis_page(request: Request):
+    user = get_current_user(request)
+    if isinstance(user, RedirectResponse):
+        return user
     return templates.TemplateResponse("content_analysis.html", {"request": request})
+
+@app.get("/search-analysis")
+async def search_analysis_page(request: Request):
+    user = get_current_user(request)
+    if isinstance(user, RedirectResponse):
+        return user
+    return templates.TemplateResponse("search_analysis.html", {"request": request})
+
 
 
 
