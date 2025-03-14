@@ -21,13 +21,15 @@ TRENDS_URL = "https://trends.google.com/trending?geo=TR"  # Google Trends sayfas
 def fetch_google_trends():
     """Selenium ile Google Trends verilerini çeker."""
     
-    # Headless modda Chrome tarayıcısını başlat
+    # Headless (görünmez) modda çalıştırmak için Chrome seçenekleri
     chrome_options = Options()
+    chrome_options.binary_location = "/usr/bin/google-chrome"  # Chrome'un tam yolu
     chrome_options.add_argument("--headless")  # Tarayıcıyı görünmez çalıştır
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
+    # ChromeDriver servisini başlat
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
