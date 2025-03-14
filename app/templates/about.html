@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Hakkında - VemSeo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="display-5 fw-bold">🚀 VemSeo Hakkında</h2>
+        <p class="lead text-muted">VemSeo, SEO analizlerini hızlı ve detaylı bir şekilde yapmanızı sağlar.</p>
+    </div>
+    
+    <!-- VemSeo Özellikleri -->
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <div class="card shadow-sm p-4">
+                <h4 class="fw-bold">📊 SEO Analiz</h4>
+                <p>Belirlediğiniz URL'yi girerek, sayfanızın SEO açısından analiz edilmesini sağlar. Başlık, meta açıklamaları, görseller ve içerik gibi birçok önemli SEO metriğini inceler.</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow-sm p-4">
+                <h4 class="fw-bold">📝 İçerik Analizi</h4>
+                <p>SEO uyumlu içerik yazmak için içeriğinizi analiz eder. Kelime sayısı, anahtar kelime yoğunluğu, okunabilirlik ve duygu analizi gibi metriklerle içerik kalitenizi artırmanıza yardımcı olur.</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow-sm p-4">
+                <h4 class="fw-bold">🔎 Search Console Analizi</h4>
+                <p>Google Search Console verilerinizi yükleyerek, SEO performansınızı anlamanızı sağlar. Verilerinizi detaylı grafiklerle gösterir ve iyileştirme önerileri sunar.</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow-sm p-4">
+                <h4 class="fw-bold">📈 Trendler</h4>
+                <p>Google Trends verilerini analiz ederek, güncel ve popüler konular hakkında bilgi verir. Saatte bir güncellenen verilerle içerik stratejinizi geliştirebilirsiniz.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h2 class="display-5 fw-bold">📰 Desteklenen Haber Siteleri</h2>
+            <p class="lead text-muted">
+                Veseo, belirli teknik altyapıya sahip haber sitelerinde SEO analizini desteklemektedir. 
+                <strong>Bu siteler, sistemimizin teknik olarak analiz yapabildiği platformlardır</strong>, ancak doğrudan bir iş ortaklığı bulunmamaktadır.
+            </p>
+        </div>
+    
+        <!-- SEO Analizi Desteklenen Haber Siteleri -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card shadow-sm p-4 text-center">
+                    <h5 class="fw-bold">✔️ TE Bilişim Altyapısı</h5>
+                    <p class="text-muted">Bu altyapıyı kullanan haber sitelerinde analiz yapabilirsiniz.</p>
+                </div>
+            </div>
+
+        </div>
+    
+        <!-- Yeni Haber Sitesi Ekletme Bilgisi -->
+        <div class="alert alert-info mt-5 text-center">
+            <h4>⚠️ Desteklenmeyen Bir Haber Sitesi mi Kullanıyorsunuz?</h4>
+            <p>Eğer SEO analizine eklenmesini istediğiniz bir haber sitesi varsa, bizimle iletişime geçebilirsiniz.</p>
+            <a href="mailto:bilgi@yilmazemre.tr" class="btn btn-primary">📩 İletişime Geç</a>
+        </div>
+    </div>
+    
+    <!-- Üyelik Bilgisi -->
+    <div class="alert alert-info mt-5">
+        <h4>⚠️ Beta Süreci & Üyelik</h4>
+        <p>Şu an <strong>VemSeo beta sürümünde</strong> olduğundan dolayı üye olamazsınız. Üyelik başvurusu yapmak için aşağıdaki e-posta adreslerine ulaşabilirsiniz:</p>
+        <ul>
+            <a href="mailto:bilgi@vesimparlar.com.tr"><li><strong>bilgi@vesimparlar.com.tr</strong></li></a>
+            <a href="mailto:bilgi@yilmazemre.tr"><li><strong>bilgi@yilmazemre.tr</strong></li></a>
+        </ul>
+    </div>
+
+    <!-- Sıkça Sorulan Sorular (SSS) -->
+    <div class="mt-5">
+        <h3 class="fw-bold">❓ Sıkça Sorulan Sorular</h3>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq1">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                        📌 VemSeo Nedir ve Ne İşe Yarar?
+                    </button>
+                </h2>
+                <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        VemSeo, SEO uyumlu içerikler oluşturmanıza ve web sitenizin SEO performansını analiz etmenize yardımcı olan bir araçtır. URL veya içerik girerek analiz yapabilirsiniz.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                        🔍 SEO Analizi Nasıl Çalışır?
+                    </button>
+                </h2>
+                <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Belirttiğiniz bir haber linkini girerek sayfadaki SEO faktörleri analiz edilir. Başlık uzunluğu, meta açıklamaları, anahtar kelime yoğunluğu gibi birçok kritik nokta değerlendirilir.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                        📝 İçerik Analizi Neler Sağlar?
+                    </button>
+                </h2>
+                <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        İçerik analizi, metnin SEO uygunluğunu kontrol eder. Okunabilirlik, kelime yoğunluğu, duygu analizi gibi metriklerle yazılarınızın kalitesini artırmanıza yardımcı olur.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq4">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                        📈 Trendler Verileri Nereden Geliyor?
+                    </button>
+                </h2>
+                <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Trendler modülü, Google Trends verilerini çekerek güncel popüler konuları listeler. Saatte bir güncellenen bu veriler, içerik stratejinizi geliştirmek için kullanışlıdır.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

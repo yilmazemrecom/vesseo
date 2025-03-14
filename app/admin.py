@@ -28,7 +28,7 @@ async def admin_dashboard(request: Request):
     total_analysis = total_analysis if total_analysis else 0  # None gelirse sıfır yap
 
     # Son 5 Analiz
-    cursor.execute("SELECT * FROM user_analyses ORDER BY created_at DESC LIMIT 5")
+    cursor.execute("SELECT * FROM user_analyses ORDER BY created_at DESC LIMIT 4")
     recent_analyses = cursor.fetchall()
 
     # Son 7 Günlük Analiz Sayısı

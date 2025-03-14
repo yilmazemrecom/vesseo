@@ -91,6 +91,6 @@ async def update_trends():
         print("✅ Trendler başarıyla güncellendi!")
         await asyncio.sleep(3600)  # 1 saat bekle (3600 saniye)
         
-@router.on_event("startup")
-async def start_trend_updater():
-    asyncio.create_task(update_trends())  # Sunucu başlarken trendleri otomatik yenile
+#@router.on_event("startup")
+#async def start_trend_updater():
+#    asyncio.create_task(update_trends())  # Sunucu başlarken trendleri otomatik yenile

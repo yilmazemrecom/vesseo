@@ -23,21 +23,28 @@ if not SECRET_KEY:
 
 # Özel yapılandırmalar (her siteye özel class'lar)
 SITE_CONFIGS = {
-    "example.com": {
-        "content_class": "article-content",
-        "image_class": "post-image"
-    },
-    "newswebsite.com": {
-        "content_class": "news-body",
-        "image_class": "news-image"
-    },
-    "sokgazetesi.com.tr": {
+    "tbilisim": {  # T-Bilişim Altyapısı
         "title_class": "h2 fw-bold text-lg-start headline my-2",
         "meta_desc_class": "lead text-lg-start text-dark my-2 description",
         "content_class": "article-text container-padding",
-        "image_class": "img-fluid"
-    }
+        "image_class": "img-fluid",
+        "featured_image": "position-relative d-block",
+        "sites": [
+            "sokgazetesi.com.tr",
+            "istiklal.com.tr",
+            "61saat.com",
+            "tele1.com.tr",
+            "bakirkoymerkez.com",
+            "ortadogugazetesi.com"
+
+        ]
+    },
+
 }
+
+
+
+
 
 
 

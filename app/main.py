@@ -117,6 +117,9 @@ async def search_analysis_page(request: Request):
         return user
     return templates.TemplateResponse("search_analysis.html", {"request": request})
 
+@app.get("/about")
+async def about_page(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_404_handler(request: Request, exc):

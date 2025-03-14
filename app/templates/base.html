@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Veseo{% endblock %}</title>
+    <title>{% block title %}VemSeo{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.min.css">
@@ -18,7 +18,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
     <div class="container">
         <a class="navbar-brand fw-bold fs-3 text-primary" href="/">
-            🚀 Veseo
+            <img src="{{ url_for('static', path='/img/vemseo_logo.png') }}" alt="VemSeo" class="me-2" style="height: 50px;">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
@@ -50,6 +50,11 @@
                 <li class="nav-item">
                     <a class="nav-link text-secondary" href="/trends">
                         <i class="bi bi-star-fill"></i> Trendler
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-secondary" href="/about">
+                        <i class="bi bi-info-circle"></i> Hakkında
                     </a>
                 </li>
             </ul>
@@ -90,7 +95,7 @@
     <!-- Modern Footer -->
     <footer class="bg-light py-4 mt-5 shadow-sm">
         <div class="container text-center">
-            <small class="text-muted">© 2025 Veseo - SEO Analiz Aracı | Tasarım ve Kodlama ❤️ by Veseo Ekibi</small>
+            <small class="text-muted">© 2025 VemSeo - SEO Analiz Aracı | Tasarım ve Kodlama ❤️ by VemSeo Ekibi</small>
         </div>
     </footer>
 

@@ -77,3 +77,30 @@
             margin: 0 auto;     /* Ortalamak için */
         }
         
+        .pagination .page-item {
+            min-width: 40px;  /* Minimum genişlik */
+            height: 40px; /* Yükseklik */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pagination .page-link {
+            border-radius: 6px !important; /* Kenarları biraz yuvarlat */
+            font-size: 16px !important; /* Sayıların okunabilir olması için font büyüklüğü */
+            text-align: center;
+            padding: 10px 15px;
+            color: #007bff !important; /* Varsayılan metin rengi */
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #007bff !important; /* Aktif sayfanın arka planı */
+            color: white !important; /* Aktif sayfa numarasının rengi */
+            border-color: #007bff !important;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #0056b3 !important;
+            color: white !important;
+        }
+        
