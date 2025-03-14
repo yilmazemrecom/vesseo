@@ -15,6 +15,7 @@ from app.config import db_config
 import mysql.connector
 from app.users import router as users_router
 from app.trends import router as trends_router
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 app = FastAPI()
 logging.basicConfig(level=logging.DEBUG)
@@ -117,7 +118,11 @@ async def search_analysis_page(request: Request):
     return templates.TemplateResponse("search_analysis.html", {"request": request})
 
 
-
+@app.exception_handler(StarletteHTTPException)
+async def custom_404_handler(request: Request, exc):
+    if exc.status_code == 404:
+        return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+    return await request.app.default_exception_handler(request, exc)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

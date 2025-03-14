@@ -1,21 +1,24 @@
 import os
 import shutil
 import re
+from typing import Counter
 from PIL import Image
+from bs4 import BeautifulSoup
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form, BackgroundTasks
 from fastapi.responses import JSONResponse
 import unicodedata
 import time
 from fastapi import Depends
 from app.auth import get_current_user
-from app.basic import counter
+from app.basic import usage_counter
 from fastapi import Request
 import json
 import uuid
 from app.config import UPLOAD_DIR
 from app.config import get_db
 from datetime import datetime
-
+from textstat import flesch_reading_ease
+from textblob import TextBlob
 
 router = APIRouter()
 
@@ -24,6 +27,10 @@ UPLOAD_DIR = "app/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)  # 📌 Eğer yoksa klasörü oluştur
 
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+STOPWORDS = {
+    "ve", "ile", "da", "de", "için", "bu", "o", "şu", "o", "çok", "gibi", "ancak",
+    "fakat", "veya", "ama", "ise", "diğer", "olan", "bir", "bu", "o", "şu", "biz", "siz"
+}
 
 
 router = APIRouter()
@@ -158,7 +165,44 @@ def extract_images_from_content(content):
     return img_urls
 
 
+def clean_html(content):
+    """HTML etiketlerini temizleyerek düz metni çıkar"""
+    soup = BeautifulSoup(content, "html.parser")
+    return soup.get_text(separator=" ")
 
+def analyze_readability(content):
+    """Okunabilirlik Skoru (Flesch-Kincaid) hesapla"""
+    text = clean_html(content)
+    return flesch_reading_ease(text)
+
+def analyze_keyword_density(content):
+    """Anahtar kelime sıklığını analiz et (Stopwords filtrelenmiş)"""
+    soup = BeautifulSoup(content, "html.parser")
+    text = soup.get_text(separator=" ")  # HTML etiketlerinden arındır
+
+    words = re.findall(r'\b[a-zA-ZçÇğĞıİöÖşŞüÜ]+\b', text.lower())  # Sadece kelimeleri al
+    filtered_words = [word for word in words if word not in STOPWORDS]  # Stopwords çıkar
+    
+    word_counts = Counter(filtered_words)
+    return word_counts.most_common(5)  # En sık geçen 5 anlamlı kelimeyi göster
+
+def analyze_sentence_length(content):
+    """Cümle uzunluklarını analiz et"""
+    text = clean_html(content)
+    sentences = re.split(r'[.!?]', text)
+    sentence_lengths = [len(sentence.split()) for sentence in sentences if sentence]
+    return sentence_lengths
+
+def analyze_sentiment(content):
+    """İçeriğin pozitif/negatif olup olmadığını analiz et"""
+    text = clean_html(content)
+    sentiment = TextBlob(text).sentiment.polarity
+    if sentiment > 0:
+        return "Pozitif"
+    elif sentiment < 0:
+        return "Negatif"
+    else:
+        return "Tarafsız"
 
 @router.post("/content-analysis/")
 def analyze_content(request: Request, title: str = Form(...), meta_desc: str = Form(...), content: str = Form(...)):
@@ -178,6 +222,10 @@ def analyze_content(request: Request, title: str = Form(...), meta_desc: str = F
     h3_count = content.count("<h3>")
     img_urls = extract_images_from_content(content)
     alt_analysis = check_alt_tags(content)
+    readability_score = analyze_readability(content)
+    keyword_density = analyze_keyword_density(content)
+    sentence_lengths = analyze_sentence_length(content)
+    sentiment = analyze_sentiment(content)
     recommendations = []
     successes = []
 
@@ -185,20 +233,32 @@ def analyze_content(request: Request, title: str = Form(...), meta_desc: str = F
     img_urls = extract_images_from_content(content)
     image_analysis_results = []
 
+    # 📌 Yıl / Ay / Gün bazlı dosya yolu oluştur
+    today = datetime.now()
+    year = today.strftime("%Y")  # Yıl (2025)
+    month = today.strftime("%m")  # Ay (03)
+    day = today.strftime("%d")  # Gün (14)
+
     for img_url in img_urls:
         img_filename = os.path.basename(img_url)  # URL'den dosya adını al
-        img_path = os.path.join(UPLOAD_DIR, img_filename)
+        img_path = os.path.join(UPLOAD_DIR, year, month, day, img_filename)  # 📌 Doğru klasör yapısı
+
+        # 🔹 Görselin tam URL yolunu oluştur (örnek: /uploads/2025/03/14/image.jpg)
+        file_path = f"/uploads/{year}/{month}/{day}/{img_filename}"  
 
         if os.path.exists(img_path):
             analysis_result = analyze_image(img_path)  # Görsel analizi yap
+            
             image_analysis_results.append({
                 "file_name": img_filename,
+                "file_path": file_path,  # 🔹 TAM PATH EKLENDİ
                 "analysis": analysis_result
             })
         else:
             image_analysis_results.append({
                 "file_name": img_filename,
-                "error": "Görsel sunucuda bulunamadı!"
+                "file_path": None,  # 🔹 Eğer görsel bulunamazsa None olarak ekle
+                "error": "🚨 Görsel sunucuda bulunamadı!"
             })
 
 
@@ -256,7 +316,7 @@ def analyze_content(request: Request, title: str = Form(...), meta_desc: str = F
     conn.commit()
     conn.close()
 
-    counter(user)  # Kullanıcının analiz sayısını artır
+    usage_counter(user)  # Kullanıcının analiz sayısını artır
 
     try:
         response_data = {
@@ -270,7 +330,11 @@ def analyze_content(request: Request, title: str = Form(...), meta_desc: str = F
             "recommendations": recommendations,
             "successes": successes,
             "image_analysis": image_analysis_results,
-            "image_count" : len(img_urls)
+            "image_count" : len(img_urls),
+            "readability_score": readability_score,
+            "keyword_density": keyword_density,
+            "sentence_lengths": sentence_lengths,
+            "sentiment": sentiment,
             }
 
         return JSONResponse(content=response_data, status_code=200)

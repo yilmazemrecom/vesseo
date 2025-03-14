@@ -66,6 +66,7 @@ function CustomUploadAdapterPlugin(editor) {
     };
 }
 
+
 // 📌 SEO Analiz İsteği
 document.getElementById("analyzeBtn").addEventListener("click", function () {
     const title = document.getElementById("title").value.trim();
@@ -89,120 +90,178 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
     })
     .then(response => response.json())
     .then(data => {
+        if (!data || typeof data !== "object") {
+            console.error("❌ Sunucudan geçersiz yanıt alındı!");
+            return;
+        }
+
         document.getElementById("analysisResult").classList.remove("d-none");
 
-        // ✅ BAŞARILAR (İyi Yapılanlar)
-        document.getElementById("successes").innerHTML = "";
-        if (data.title_length >= 50) {
-            document.getElementById("successes").innerHTML += `<li class="text-success">✅ Başlık uzunluğu yeterli!</li>`;
-        }
-        if (data.meta_desc_length >= 120) {
-            document.getElementById("successes").innerHTML += `<li class="text-success">✅ Meta açıklaması uygun!</li>`;
-        }
-        if (data.word_count >= 300) {
-            document.getElementById("successes").innerHTML += `<li class="text-success">✅ İçerik uzunluğu yeterli!</li>`;
-        }
-        if (data.h2_count >= 2) {
-            document.getElementById("successes").innerHTML += `<li class="text-success">✅ H2 başlık sayısı ideal!</li>`;
-        }
-        if (data.alt_analysis.status === "Tamam") {
-            document.getElementById("successes").innerHTML += `<li class="text-success">✅ Tüm görseller ALT metnine sahip!</li>`;
+        // **✅ Başarılar**
+        let successContainer = document.getElementById("successes");
+        if (successContainer) {
+            successContainer.innerHTML = "";
+            let successList = [];
+            if (data.title_length >= 50) successList.push("✅ Başlık uzunluğu yeterli!");
+            if (data.meta_desc_length >= 120) successList.push("✅ Meta açıklaması uygun!");
+            if (data.word_count >= 300) successList.push("✅ İçerik uzunluğu yeterli!");
+            if (data.h2_count >= 2) successList.push("✅ H2 başlık sayısı ideal!");
+            if (data.alt_analysis.status === "Tamam") successList.push("✅ Tüm görseller ALT metnine sahip!");
+
+            successContainer.innerHTML = successList.length
+                ? successList.map(msg => `<li class="text-success">${msg}</li>`).join("")
+                : `<li class="text-warning">⚠️ İyileştirme önerilerini ve hatalarınızı kontrol ediniz!</li>`;
         }
 
-        if (document.getElementById("successes").innerHTML.trim() === "") {
-            document.getElementById("successes").innerHTML = `<li class="text-warning">⚠️ İyileştirme önerilerini ve hatalarınızı kontrol ediniz!</li>`;
+        // **📌 İyileştirme Önerileri**
+        let suggestionContainer = document.getElementById("suggestions");
+        if (suggestionContainer) {
+            let suggestions = data.recommendations.filter(rec =>
+                !rec.includes("olmalıdır") && !rec.includes("eksik") && !rec.includes("hata")
+            );
+            suggestionContainer.innerHTML = suggestions.length
+                ? suggestions.map(msg => `<li class="text-primary">🧷 ${msg}</li>`).join("")
+                : "<li class='text-success'>✅ Herhangi bir iyileştirme önerisi bulunamadı!</li>";
         }
 
-        // 📌 İyileştirme Önerileri
-        const suggestionsList = data.recommendations
-            .map(rec => `<li class="text-primary">🧷 ${rec}</li>`).join("");
-
-        document.getElementById("suggestions").innerHTML = suggestionsList || "<li class='text-success'>✅ Çok iyi iş, herhangi bir iyileştirme önerisi bulunamadı!</li>";
-
-        // ⚠️ Yapılması Gerekenler
-        const improvementsList = data.recommendations
-            .filter(rec => rec.includes("olmalıdır"))
-            .map(rec => `<li class="text-warning">⚠️ ${rec}</li>`).join("");
-
-        document.getElementById("improvements").innerHTML = improvementsList || "<li class='text-success'>✅ Her şey yolunda, yapılması gereken bir işlem bulunamadı!</li>";
-
-        // ❌ Hatalar
-        const errorsList = data.recommendations
-            .filter(rec => rec.includes("eksik") || rec.includes("kısa"))
-            .map(rec => `<li class="text-danger">❌ ${rec}</li>`).join("");
-
-        document.getElementById("errors").innerHTML = errorsList || "<li class='text-success'>✅ Harika! Herhangi bir hata tespit edilmedi!</li>";
-
-
-        // 📌 Görsel ALT Metni ve diğer Analiz Sonuçlarını Göster
-        if (data.alt_analysis.status === "Eksik ALT") {
-            document.getElementById("altWarning").classList.remove("d-none");
-            document.getElementById("altWarning").innerHTML = `
-                <li class="text-danger">⚠️ ${data.alt_analysis.message}</li>
-            `;
-        } 
-        else if (data.alt_analysis.status === "no_images") {
-            document.getElementById("altWarning").classList.remove("d-none");
-            document.getElementById("altWarning").innerHTML =
-                `<li class="text-danger">⚠️ ${data.alt_analysis.message}</li>`;
-        } 
-        else {
-            document.getElementById("altWarning").classList.add("d-none");
+        // **⚠ Yapılması Gerekenler**
+        let improvementContainer = document.getElementById("improvements");
+        if (improvementContainer) {
+            let improvements = data.recommendations.filter(rec => rec.includes("olmalıdır"));
+            improvementContainer.innerHTML = improvements.length
+                ? improvements.map(msg => `<li class="text-warning">⚠️ ${msg}</li>`).join("")
+                : "<li class='text-success'>✅ Her şey yolunda, yapılması gereken bir işlem bulunamadı!</li>";
         }
 
-        let imageResultsContainer = document.getElementById("imageResults");
-        imageResultsContainer.innerHTML = ""; // Önceki sonuçları temizle
+        // **❌ Hatalar**
+        let errorContainer = document.getElementById("errors");
+        if (errorContainer) {
+            let errors = data.recommendations.filter(rec =>
+                rec.includes("eksik") || rec.includes("hata") || rec.includes("yanlış")
+            );
 
-        data.image_analysis.forEach((img) => {
-            let resultHTML = `
-                <div class="alert alert-info">
-                    <h5>📊 ${img.file_name}</h5>
-                    ${img.error ? `<p class="text-danger">${img.error}</p>` : `
-                        <ul>
-                            <li>Format: <strong>${img.analysis.format}</strong></li>
-                            <li>Dosya Boyutu: <strong>${img.analysis.file_size_kb} KB / ${img.analysis.file_size_mb} MB</strong></li>
-                            <li>Boyut Durumu: <strong>${img.analysis.size_status}</strong></li>
-                            <li>Format Durumu: <strong>${img.analysis.format_status}</strong></li>
-                        </ul>
-                    `}
-                </div>
-            `;
+            // **Görsel Yoksa Hata Olarak Ekle**
+            if (data.image_count === 0) {
+                errors.push("🚨 İçeriğinizde hiç görsel bulunmuyor! En az bir görsel eklemelisiniz.");
+            }
 
-            imageResultsContainer.innerHTML += resultHTML;
-        });
+            errorContainer.innerHTML = errors.length
+                ? errors.map(msg => `<li class="text-danger">❌ ${msg}</li>`).join("")
+                : "<li class='text-success'>✅ Harika! Herhangi bir hata tespit edilmedi!</li>";
+        }
 
-        document.getElementById("title_length").innerText = data.title_length || 0;
-        document.getElementById("word_count").innerText = data.word_count || 0;
-        document.getElementById("meta_desc_length").innerText = data.meta_desc_length || 0;
-        document.getElementById("image_count").innerText = data.image_count || 0;
-    
-        // Renk değişimleri (Yeşil / Sarı / Kırmızı)
+        // 📌 **Ana Sayaçları Güncelle**
+        updateTextContent("title_length", data.title_length);
+        updateTextContent("word_count", data.word_count);
+        updateTextContent("meta_desc_length", data.meta_desc_length);
+        updateTextContent("image_count", data.image_count);
+
+        // 📖 Okunabilirlik Skoru
+        updateTextContent("readability_score", data.readability_score.toFixed(2));
+
+        // 🔑 Anahtar Kelime Dağılımı
+        updateTextContent("keyword_density", data.keyword_density.map(k => `${k[0]} (${k[1]} kez)`).join(", "));
+
+        // 📏 Ortalama Cümle Uzunluğu
+        let avgSentenceLength = (data.sentence_lengths.reduce((a, b) => a + b, 0) / data.sentence_lengths.length).toFixed(2);
+        updateTextContent("sentence_length", avgSentenceLength);
+
+        // 🎭 Duygu Analizi
+        updateTextContent("sentiment", data.sentiment);
+
+// 📌 Görsel ALT Metni ve diğer Analiz Sonuçlarını Göster
+if (data.alt_analysis.status === "Eksik ALT") {
+    document.getElementById("altWarning").classList.remove("d-none");
+    document.getElementById("altWarning").innerHTML = `
+        <li class="text-danger">⚠️ ${data.alt_analysis.message}</li>
+    `;
+} 
+else if (data.alt_analysis.status === "no_images") {
+    document.getElementById("altWarning").classList.remove("d-none");
+    document.getElementById("altWarning").innerHTML =
+        `<li class="text-danger">⚠️ ${data.alt_analysis.message}</li>`;
+} 
+else {
+    document.getElementById("altWarning").classList.add("d-none");
+}
+
+// 📌 Görsel Analiz Sonuçları ve ALT Metni Kontrolleri
+let imageResultsContainer = document.getElementById("imageResults");
+imageResultsContainer.innerHTML = ""; // Önceki sonuçları temizle
+
+data.image_analysis.forEach((img) => {
+    let imgSrc = img.file_path ? img.file_path : "https://via.placeholder.com/100x60?text=Görsel+Bulunamadı"; 
+
+    // 📌 Eğer analiz bilgisi yoksa, boş değerler atayalım
+    let imgAnalysis = img.analysis || {
+        format: "Bilinmiyor",
+        file_size_kb: "?",
+        file_size_mb: "?",
+        size_status: "Bilinmiyor",
+        format_status: "Bilinmiyor"
+    };
+
+    let resultHTML = `
+        <div class="alert alert-info">
+            <h5>📊 ${img.file_name || "Bilinmeyen Görsel"}</h5>
+            ${img.error ? `<p class="text-danger">${img.error}</p>` : ""}
+            <ul>
+                <li>📁 <strong>Görsel Yolu:</strong> <a href="${imgSrc}" target="_blank">${img.file_name}</a></li>
+                <li>📁 <strong>Format:</strong> ${imgAnalysis.format}</li>
+                <li>📏 <strong>Dosya Boyutu:</strong> ${imgAnalysis.file_size_kb} KB / ${imgAnalysis.file_size_mb} MB</li>
+                <li>📌 <strong>Boyut Durumu:</strong> ${imgAnalysis.size_status}</li>
+                <li>🖼️ <strong>Format Durumu:</strong> ${imgAnalysis.format_status}</li>
+            </ul>
+        </div>
+    `;
+
+    imageResultsContainer.innerHTML += resultHTML;
+});
+
+
+
+        // 📌 Renk Değişimi
+        updateCardColor("word_count", data.word_count, 300, 1000);
         updateCardColor("title_length", data.title_length, 50, 60);
-        updateCardColor("word_count", data.word_count, 300, 500);
-        updateCardColor("meta_desc_length", data.meta_desc_length, 150, 160);
+        updateCardColor("meta_desc_length", data.meta_desc_length, 120, 160);
         updateCardColor("image_count", data.image_count, 1, 5);
-    
-    
     })
     .catch(error => {
         console.error("❌ SEO Analizi yapılırken hata oluştu:", error);
-        document.getElementById("errors").innerHTML = `<li class="text-danger">🚨 Sunucu hatası! Lütfen daha sonra tekrar deneyin.</li>`;
+        let errorContainer = document.getElementById("errors");
+        if (errorContainer) {
+            errorContainer.innerHTML = `<li class="text-danger">🚨 Sunucu hatası! Lütfen daha sonra tekrar deneyin.</li>`;
+        }
     });
 });
 
-function updateCardColor(id, value, min, max) {
-    const element = document.getElementById(id);
-    if (value < min) {
-        element.classList.remove("text-success", "text-warning");
-        element.classList.add("text-danger");
-    } else if (value > max) {
-        element.classList.remove("text-success", "text-danger");
-        element.classList.add("text-warning");
+// **🛠 ID Kontrolü ve Güncelleme Fonksiyonu**
+function updateTextContent(id, value) {
+    let element = document.getElementById(id);
+    if (element) {
+        element.textContent = value || "-";
     } else {
-        element.classList.remove("text-danger", "text-warning");
-        element.classList.add("text-success");
+        console.warn(`⚠ ID bulunamadı: ${id}`);
     }
 }
 
 
+function updateCardColor(id, value, min, max) {
+    const element = document.getElementById(id);
+
+    if (!element || isNaN(value)) {
+        console.warn(`⚠ updateCardColor: "${id}" için geçersiz değer!`);
+        return;
+    }
+
+    element.classList.remove("text-success", "text-warning", "text-danger");
+
+    if (value < min) {
+        element.classList.add("text-danger"); // Kırmızı - Yetersiz
+    } else if (value >= min && value <= max) {
+        element.classList.add("text-success"); // Yeşil - İdeal
+    } else {
+        element.classList.add("text-warning"); // Sarı - Fazla
+    }
+}
 

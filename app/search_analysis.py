@@ -8,7 +8,7 @@ from app.config import get_db
 from fastapi.responses import RedirectResponse
 from app.auth import get_current_user
 from app.auth import get_current_user
-from app.basic import counter
+from app.basic import usage_counter
 from fastapi import Request
 
 
@@ -67,7 +67,7 @@ async def analyze_search_console(request: Request, file: UploadFile = File(...))
         }
 
         # ✅ Kullanıcının analiz sayısını artır
-        counter(user)
+        usage_counter(user)
 
         return templates.TemplateResponse("search_analysis.html", {
             "request": request,

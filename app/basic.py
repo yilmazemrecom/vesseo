@@ -4,7 +4,7 @@ from app.config import get_db
 from app.auth import get_current_user
 from fastapi import Depends
 
-def counter(user: str):
+def usage_counter(user: str):
     """ Kullanıcının analiz sayısını 1 artırır. """
     conn = get_db()
     if not conn:
