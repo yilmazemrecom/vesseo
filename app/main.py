@@ -17,7 +17,7 @@ from app.users import router as users_router
 from app.trends import router as trends_router
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 logging.basicConfig(level=logging.DEBUG)
 
 # Şablonları ve statik dosyaları bağla
