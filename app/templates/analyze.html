@@ -60,12 +60,14 @@
             <div class="card shadow-lg border-0 rounded-4 p-4 animate-fade-in">
                 <ul class="list-unstyled">
                     {% for rec in recommendations %}
-                    <li class="p-3 mb-2 rounded-3 shadow-sm" style="border-left: 5px solid {% if 'kötü' in rec %}#dc3545{% elif 'geliştirilebilir' in rec %}#ffc107{% else %}#28a745{% endif %}; background-color: #f8f9fa;">
-                        <strong>{% if 'kötü' in rec %}🔴 {% elif 'geliştirilebilir' in rec %}🟡 {% else %}🟢 {% endif %} {{ rec.split(':')[0] }}</strong><br>
+                    <li class="p-3 mb-2 rounded-3 shadow-sm"
+                        style="border-left: 5px solid #ffc107; background-color: #f8f9fa;">
+                        <strong>{{ rec.split(':')[0] }}</strong><br>
                         <span class="text-muted">{{ rec.split(':')[1] }}</span>
                     </li>
                     {% endfor %}
                 </ul>
+                
             </div>
         </div>
         {% endif %}

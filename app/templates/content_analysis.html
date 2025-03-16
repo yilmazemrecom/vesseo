@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}VEMSEO | İçerik Analizi{% endblock %}
-{% block description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO’nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
+{% block description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO'nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
 {% block og_title %}VEMSEO | İçerik Analizi{% endblock %}
-{% block og_description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO’nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
+{% block og_description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO'nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
 {% block twitter_title %}VEMSEO | İçerik Analizi{% endblock %}
-{% block twitter_description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO’nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
+{% block twitter_description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO'nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
 {% block schema_title %}VEMSEO | İçerik Analizi{% endblock %}
 
 
@@ -36,138 +36,276 @@
             <textarea id="editor"></textarea>
         
             <div class="mt-3">
-                <button type="button" id="analyzeBtn" class="btn btn-primary btn-lg w-100">🔍 SEO Analizi Yap</button>
+                <button type="button" id="analyzeBtn" class="btn btn-primary btn-lg w-100 animate-pulse">🔍 SEO Analizi Yap</button>
             </div>
         </form>     
     </div>
 
-    <div id="analysisResult" class="d-none">
-        <h3 class="fw-bold text-center text-success">🚀 Analiz Sonucu</h3>
-
-        <!-- 📊 Ana SEO Metrikleri -->
-        <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Başlık Uzunluğu</h5>
-                            <h2 class="text-danger" id="title_length">0</h2>
+    <!-- Analiz Sonuçları -->
+    <div id="analysisResult" class="container mt-5 d-none">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- SEO Skor Göstergesi -->
+                <div class="d-flex flex-column align-items-center my-4">
+                    <h4 class="text-center mb-3">SEO Puanı</h4>
+                    <div class="position-relative">
+                        <svg width="150" height="150" viewBox="0 0 120 120">
+                            <defs>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12" />
+                            <circle id="progressCircle" cx="60" cy="60" r="54" fill="none" stroke="#28a745" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377" transform="rotate(-90 60 60)" />
+                        </svg>
+                        <div class="position-absolute top-50 start-50 translate-middle text-center">
+                            <h2 id="seoScore" class="mb-0 fw-bold">0</h2>
+                            <p id="seoStatus" class="small mb-0">Analiz ediliyor...</p>
                         </div>
                     </div>
+                    <!-- SEO İyileştirme Önerileri Butonu Buraya Eklenecek -->
                 </div>
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Kelime Sayısı</h5>
-                            <h2 class="text-danger" id="word_count">0</h2>
+            </div>
+            
+            <!-- SEO İyileştirme Önerileri Bölümü -->
+            <div class="col-md-8 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">📈 SEO İyileştirme Rehberi</h4>
+                        <p class="text-muted">SEO puanınızı yükseltmek için aşağıdaki temel adımları izleyin:</p>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">📝 İçerik Kalitesi</h5>
+                                        <ul class="small">
+                                            <li>En az 600+ kelime kullanın</li>
+                                            <li>H2 ve H3 başlıklar ekleyin</li>
+                                            <li>Anahtar kelimeleri doğal şekilde yerleştirin</li>
+                                            <li>Özgün ve değerli içerik oluşturun</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">🔍 Teknik Optimizasyon</h5>
+                                        <ul class="small">
+                                            <li>Başlık uzunluğu: 50-65 karakter</li>
+                                            <li>Meta açıklama: 120-160 karakter</li>
+                                            <li>Tüm görsellere ALT metni ekleyin</li>
+                                            <li>Sayfa yükleme hızını optimize edin</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">📱 Kullanıcı Deneyimi</h5>
+                                        <ul class="small">
+                                            <li>Mobil uyumlu tasarım kullanın</li>
+                                            <li>Kolay okunabilir yazı tipi ve boyutu seçin</li>
+                                            <li>Sayfada gezinmeyi kolaylaştırın</li>
+                                            <li>Sayfa içi bağlantılar ekleyin</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">🔗 Bağlantı Stratejisi</h5>
+                                        <ul class="small">
+                                            <li>İç bağlantılar oluşturun</li>
+                                            <li>Kaliteli dış bağlantılar ekleyin</li>
+                                            <li>Kırık bağlantıları düzeltin</li>
+                                            <li>Sosyal medya paylaşımlarını optimize edin</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Meta Açıklaması</h5>
-                            <h2 class="text-success" id="meta_desc_length">0</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Görseller</h5>
-                            <h2 class="text-danger" id="image_count">0</h2>
+                        
+                        <div class="text-center mt-4">
+                            <p class="small text-muted">Detaylı öneriler için SEO analizi yapın ve "SEO Puanınızı Nasıl Yükseltebilirsiniz?" butonuna tıklayın.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 📌 SEO Sonuç Kartları -->
-        <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-4 g-4 align-items-stretch">
-                <div class="col">
-                    <div class="card shadow border-0 rounded-4 p-3 h-100">
-                        <h5 class="fw-bold text-success">🌟 Başarılar</h5>
-                        <ul id="successes" class="list-unstyled"></ul>
-
+        <!-- Analiz Sonuçları Bölümü -->
+        <div class="row">
+            <!-- 📊 Ana SEO Metrikleri -->
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="fw-bold mb-3">📊 İçerik Metrikleri</h4>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow border-0 rounded-4 p-3 h-100">
-                        <h5 class="fw-bold text-info">📌 İyileştirme Önerileri</h5>
-                        <ul id="suggestions" class="list-unstyled"></ul>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow border-0 rounded-4 p-3 h-100">
-                        <h5 class="fw-bold text-warning">⚠️ Yapılması Gerekenler</h5>
-                        <ul id="improvements" class="list-unstyled"></ul>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow border-0 rounded-4 p-3 h-100">
-                        <h5 class="fw-bold text-danger">❌ Hatalar</h5>
-                        <ul id="errors" class="list-unstyled"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 🖼️ Görsel Analizi -->
-        <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">📖 Okunabilirlik</h5>
-                            <h2 class="text-success" id="readability_score">-</h2>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Başlık Uzunluğu</h5>
+                                <p id="title_length" class="display-6 fw-bold">-</p>
+                                <p class="text-muted small">İdeal: 50-65 karakter</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">🔑 Anahtar Kelimeler</h5>
-                            <p id="keyword_density" class="text-muted">-</p>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Kelime Sayısı</h5>
+                                <p id="word_count" class="display-6 fw-bold">-</p>
+                                <p class="text-muted small">İdeal: 600+ kelime</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">📏 Ortalama Cümle Uzunluğu</h5>
-                            <h2 class="text-warning" id="sentence_length">-</h2>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Meta Açıklama</h5>
+                                <p id="meta_desc_length" class="display-6 fw-bold">-</p>
+                                <p class="text-muted small">İdeal: 120-160 karakter</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center shadow h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">🎭 Duygu Analizi</h5>
-                            <h2 class="text-info" id="sentiment">-</h2>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Görsel Sayısı</h5>
+                                <p id="image_count" class="display-6 fw-bold">-</p>
+                                <p class="text-muted small">İdeal: 3+ görsel</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 🖼️ Görsel ALT Metni Uyarıları -->
-        <div id="altWarning" class="alert alert-warning d-none mt-3">
-            <h5 class="fw-bold">⚠️ Görsel ALT Metni Uyarısı</h5>
-            <ul id="altWarningList" class="list-unstyled"></ul>
-        </div>
+            <!-- 📝 Analiz Sonuçları -->
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-success bg-opacity-10 border-0">
+                                <h5 class="card-title mb-0">✅ Başarılı Noktalar</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul id="successes" class="mb-0">
+                                    <li class="text-muted">Henüz analiz yapılmadı</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-danger bg-opacity-10 border-0">
+                                <h5 class="card-title mb-0">❌ Hatalar</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul id="errors" class="mb-0">
+                                    <li class="text-muted">Henüz analiz yapılmadı</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-warning bg-opacity-10 border-0">
+                                <h5 class="card-title mb-0">⚠️ İyileştirme Gerektiren Noktalar</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul id="improvements" class="mb-0">
+                                    <li class="text-muted">Henüz analiz yapılmadı</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-primary bg-opacity-10 border-0">
+                                <h5 class="card-title mb-0">💡 Öneriler</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul id="suggestions" class="mb-0">
+                                    <li class="text-muted">Henüz analiz yapılmadı</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- 📸 Tüm Görsel Analiz Sonuçları -->
-        <div id="imageResults" class="container mt-4">
-            <h4 class="fw-bold text-center">📊 Görsel Analiz Sonuçları</h4>
-            <div class="row row-cols-1 row-cols-md-3 g-4" id="imageAnalysisContainer">
-                <!-- Görseller buraya dinamik olarak eklenecek -->
+            <!-- 🖼️ Görsel Analizi -->
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-info bg-opacity-10 border-0">
+                                <h5 class="card-title mb-0">🖼️ Görsel Analizi</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="altWarning" class="alert alert-danger d-none">
+                                    <!-- ALT metni uyarıları buraya gelecek -->
+                                </div>
+                                <div id="imageResults">
+                                    <p class="text-muted">Henüz görsel analizi yapılmadı</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
     </div>
 </div>
-
+<style>
+    /* Genel Çember Stili */
+    svg {
+        filter: url(#glow); /* Neon Glow efekti */
+    }
+    
+    #progressCircle {
+        transition: stroke-dashoffset 1.2s ease-out, stroke 0.5s ease-in-out;
+        filter: drop-shadow(0px 0px 12px rgba(40, 167, 69, 0.7));
+    }
+    
+    /* Buton Animasyonu */
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+            transform: scale(1);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+            transform: scale(1.05);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+            transform: scale(1);
+        }
+    }
+    
+    /* Animasyon Efektleri */
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 <!-- CKEditor 5 -->
 <script src="{{ url_for('static', path='/js/ckeditor.js') }}"></script>
 <script src="{{ url_for('static', path='/js/ckeditor_config.js') }}"></script>
