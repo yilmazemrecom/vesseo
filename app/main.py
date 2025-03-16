@@ -18,6 +18,8 @@ from app.trends import router as trends_router
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from datetime import datetime
 from fastapi.responses import Response
+from fastapi.exception_handlers import http_exception_handler
+
 
 app = FastAPI(docs_url=None, redoc_url=None)
 logging.basicConfig(level=logging.DEBUG)
@@ -124,10 +126,10 @@ async def about_page(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
 @app.exception_handler(StarletteHTTPException)
-async def custom_404_handler(request: Request, exc):
+async def custom_404_handler(request: Request, exc: StarletteHTTPException):
     if exc.status_code == 404:
         return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
-    return await request.app.default_exception_handler(request, exc)
+    return await http_exception_handler(request, exc)
 
 @app.get("/sitemap.xml", include_in_schema=False)
 async def generate_sitemap():
