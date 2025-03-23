@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Vemseo Panel{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', path='/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.min.css">
+  <link rel="icon" href="{{ url_for('static', path='/img/favicon.ico') }}" type="image/x-icon">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    .nav-link {
+      font-weight: 500;
+      color: #333 !important;
+      transition: 0.2s;
+    }
+    .nav-link:hover {
+      color: #0d6efd !important;
+    }
+    .user-badge {
+      background-color: #0d6efd;
+      color: white;
+      border-radius: 20px;
+      padding: 5px 15px;
+      font-size: 0.9rem;
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 🎯 Geniş ama dengeli navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+    <div class="container">
+      <!-- Logo sola sabit -->
+      <a class="navbar-brand d-flex align-items-center fw-bold fs-3 text-primary" href="/">
+        <img src="{{ url_for('static', path='/img/vemseo_logo.png') }}" alt="VemSeo" class="me-2" style="height: 45px;">
+      </a>
+  
+      <!-- Mobil toggle -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVemseo"
+        aria-controls="navbarVemseo" aria-expanded="false" aria-label="Menüyü Aç/Kapat">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Menü sağa hizalanır -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarVemseo">
+        <!-- Menü linkleri -->
+        <ul class="navbar-nav fw-semibold align-items-center">
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/dashboard"><i class="bi bi-speedometer2"></i> Panelim</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/analyze"><i class="bi bi-link-45deg"></i> Link Analizi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/content-analysis"><i class="bi bi-file-text"></i> İçerik Analizi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/search-analysis"><i class="bi bi-upload"></i> Search Console</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/trends"><i class="bi bi-bar-chart-fill"></i> Trendler</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/user-analyses"><i class="bi bi-clock-history"></i> Analizlerim</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger px-3" href="/logout"><i class="bi bi-box-arrow-right"></i> Çıkış</a>
+          </li>
+        </ul>
+  
+        <!-- Kullanıcı Menüsü -->
+        <div class="ms-4">
+          {% if request.cookies.access_token %}
+          <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center px-3 rounded-pill"
+              id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle fs-5 me-2"></i> <span>Hesabım</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="userMenu">
+              {% if request.cookies.is_admin == "1" %}
+              <li><a class="dropdown-item" href="/admin"><i class="bi bi-shield-lock"></i> Admin Paneli</a></li>
+              <li><hr class="dropdown-divider"></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-speedometer2"></i> Panelim</a></li>
+              <li><a class="dropdown-item" href="/user-analyses"><i class="bi bi-clock-history"></i> Analizlerim</a></li>
+              <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</a></li>
+            </ul>
+          </div>
+          {% else %}
+          <a class="btn btn-outline-secondary rounded-circle" href="/login" title="Giriş Yap">
+            <i class="bi bi-person-circle fs-3"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+<!-- Sayfa İçeriği -->
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

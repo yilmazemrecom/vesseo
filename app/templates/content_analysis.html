@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "user/base.html" %}
 
 {% block title %}VEMSEO | İçerik Analizi{% endblock %}
 {% block description %}İçeriklerinizi SEO uyumlu hale getirin! 🚀 VEMSEO'nun içerik analiz aracı ile başlık, anahtar kelime ve okunabilirlik optimizasyonu yapın.{% endblock %}
@@ -187,6 +187,56 @@
                     </div>
                 </div>
             </div>
+
+<!-- 📝 Gelişmiş SEO Metrikleri -->
+<div class="row mt-3">
+    <!-- Okunabilirlik -->
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📚 Okunabilirlik</h5>
+                <p id="readability_score" class="display-6 fw-bold text-danger">-</p>
+                <p class="text-muted small">İdeal: 60+ (Flesch)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anahtar Kelimeler -->
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔑 Anahtar Kelimeler</h5>
+                <div id="keyword_density" class="d-flex flex-wrap justify-content-center gap-1">
+                    <!-- Anahtar kelimeler buraya badge olarak JS ile eklenecek -->
+                    <span class="badge bg-secondary">Yükleniyor...</span>
+                </div>
+                <p class="text-muted small mt-2">En çok kullanılan kelimeler</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cümle Uzunluğu -->
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🧩 Cümle Uzunluğu</h5>
+                <p id="sentence_length" class="display-6 fw-bold text-danger">-</p>
+                <p class="text-muted small">İdeal: 12-20 kelime</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Duygu Analizi -->
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">😊 Duygu Analizi</h5>
+                <p id="sentiment" class="display-6 fw-bold text-dark">-</p>
+                <p class="text-muted small">Nötr / Olumlu / Olumsuz</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- 📝 Analiz Sonuçları -->
             <div class="container mt-4">

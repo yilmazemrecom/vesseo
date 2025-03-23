@@ -19,6 +19,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from datetime import datetime
 from fastapi.responses import Response
 from fastapi.exception_handlers import http_exception_handler
+from app import user_panel
 
 
 app = FastAPI(docs_url=None, redoc_url=None)
@@ -35,6 +36,8 @@ app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(users_router)
 app.include_router(trends_router)
+app.include_router(user_panel.router)
+
 
 def get_db():
     return mysql.connector.connect(**db_config)

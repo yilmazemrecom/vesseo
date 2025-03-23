@@ -52,78 +52,63 @@
 
 <body>
 
-<!-- Modern Navbar -->
+<!-- 🔵 Modern Girişli Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
     <div class="container">
-        <a class="navbar-brand fw-bold fs-3 text-primary" href="/">
-            <img src="{{ url_for('static', path='/img/vemseo_logo.png') }}" alt="VemSeo" class="me-2" style="height: 50px;">
-        </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-            aria-label="Menüyü Aç/Kapat">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav fw-semibold">
-                <li class="nav-item">
-                    <a class="nav-link text-secondary" href="/">
-                        <i class="bi bi-house-door-fill"></i> Ana Sayfa
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-secondary" href="/analyze">
-                        <i class="bi bi-graph-up-arrow"></i> SEO Analiz
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-secondary" href="/content-analysis">
-                        <i class="bi bi-pencil-square"></i> İçerik Analizi
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-secondary" href="/search_analysis">
-                        <i class="bi bi-search"></i> Search Console Analizi
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-secondary" href="/trends">
-                        <i class="bi bi-star-fill"></i> Trendler
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-secondary" href="/about">
-                        <i class="bi bi-info-circle"></i> Hakkında
-                    </a>
-                </li>
-            </ul>
-
-<!-- Kullanıcı Menüsü -->
-<div class="ms-3">
-    {% if request.cookies.access_token %}
-        <div class="dropdown">
-            <button class="btn btn-light border-0 dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-person-circle fs-3"></i>
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center fw-bold fs-3 text-primary" href="/">
+        <img src="{{ url_for('static', path='/img/vemseo_logo.png') }}" alt="VemSeo" class="me-2" style="height: 45px;">
+      </a>
+  
+      <!-- Mobil Menü Butonu -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Menüyü Aç/Kapat">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Menü & Kullanıcı -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <!-- Sayfa Linkleri -->
+        <ul class="navbar-nav fw-semibold align-items-center">
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/"><i class="bi bi-house-door-fill me-1"></i> Ana Sayfa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/trends"><i class="bi bi-bar-chart-fill me-1"></i> Trendler</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary px-3" href="/about"><i class="bi bi-info-circle-fill me-1"></i> Hakkında</a>
+          </li>
+        </ul>
+  
+        <!-- Kullanıcı Menüsü -->
+        <div class="ms-4">
+          {% if request.cookies.access_token %}
+          <div class="dropdown">
+            <button class="btn btn-outline-primary rounded-pill dropdown-toggle d-flex align-items-center" id="userMenu"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle fs-5 me-2"></i> <span>Hesabım</span>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                {% if request.cookies.is_admin == "1" %}
-                    <li><a class="dropdown-item" href="/admin"><i class="bi bi-shield-lock"></i> Admin Paneli</a></li>
-                {% endif %}
-                <li><a class="dropdown-item" href="/user-analyses"><i class="bi bi-clock-history"></i> Geçmiş Analizlerim</a></li>
-                <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</a></li>
+            <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="userMenu">
+              {% if request.cookies.is_admin == "1" %}
+              <li><a class="dropdown-item" href="/admin"><i class="bi bi-shield-lock"></i> Admin Paneli</a></li>
+              <li><hr class="dropdown-divider"></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-speedometer2"></i> Panelim</a></li>
+              <li><a class="dropdown-item" href="/user-analyses"><i class="bi bi-clock-history"></i> Analizlerim</a></li>
+              <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</a></li>
             </ul>
+          </div>
+          {% else %}
+          <a class="btn btn-outline-secondary rounded-circle" href="/login" title="Giriş Yap">
+            <i class="bi bi-person-circle fs-4"></i>
+          </a>
+          {% endif %}
         </div>
-    {% else %}
-        <a class="btn btn-light border-0" href="/login">
-            <i class="bi bi-person-circle fs-3"></i>
-        </a>
-    {% endif %}
-</div>
-
-
-        </div>
+      </div>
     </div>
-</nav>
-
+  </nav>
+  
 
     <!-- İçerik Alanı -->
     <div class="container mt-5">

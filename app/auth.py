@@ -65,7 +65,7 @@ def login(response: RedirectResponse, form_data: OAuth2PasswordRequestForm = Dep
     access_token = create_access_token(data={"sub": user["username"]})
     
     # JWT token'ı çerez olarak kaydediyoruz
-    response = RedirectResponse(url="/analyze", status_code=302)
+    response = RedirectResponse(url="/dashboard", status_code=302)
     response.set_cookie(key="access_token", value=access_token, httponly=True)
     response.set_cookie(key="is_admin", value="1" if user["is_admin"] else "0")
 
