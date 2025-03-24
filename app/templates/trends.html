@@ -1,4 +1,8 @@
-{% extends "base.html" %}
+{% if request.cookies.access_token %}
+    {% extends "user/base.html" %}
+{% else %}
+    {% extends "base.html" %}
+{% endif %}
 
 {% block title %}VEMSEO | SEO Trendleri{% endblock %}
 {% block description %}En güncel SEO trendlerini ve algoritma değişikliklerini keşfedin! 🚀 VEMSEO ile rakiplerinizin önüne geçmek için en son gelişmeleri takip edin.{% endblock %}
