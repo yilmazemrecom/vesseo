@@ -30,7 +30,7 @@ def fetch_google_trends():
     chrome_options.add_argument("--disable-dev-shm-usage")
 
     # ChromeDriver servisini başlat
-    service = Service(ChromeDriverManager().install())
+    service = Service("/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
     try:
