@@ -19,27 +19,24 @@ TRENDS_URL = "https://trends.google.com/trending?geo=TR"  # Google Trends sayfas
 
 
 def fetch_google_trends():
-    """Selenium ile Google Trends verilerini çeker."""
-    
-    # Headless (görünmez) modda çalıştırmak için Chrome seçenekleri
+    print("🔍 fetch_google_trends başladı")
+
     chrome_options = Options()
-    chrome_options.binary_location = "/usr/bin/google-chrome"  # Chrome'un tam yolu
-    chrome_options.add_argument("--headless")  # Tarayıcıyı görünmez çalıştır
+    chrome_options.binary_location = "/usr/bin/google-chrome"
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # ChromeDriver servisini başlat
+    print("🚀 Chrome ayarlandı, chromedriver başlatılıyor...")
     service = Service("/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    
+
     try:
         driver.get(TRENDS_URL)
-        time.sleep(3)  # Sayfanın tam yüklenmesini bekle
+        time.sleep(3)
 
         trends = []
-
-        # Trend başlıklarını bul
         trend_elements = driver.find_elements(By.CSS_SELECTOR, "div.mZ3RIc")
         search_volume_elements = driver.find_elements(By.CSS_SELECTOR, "div.lqv0Cb")
 
@@ -49,12 +46,13 @@ def fetch_google_trends():
             trends.append({"title": title, "search_volume": search_volume})
 
     except Exception as e:
-        print(f"❌ Selenium ile Google Trends verisi çekerken hata oluştu: {e}")
+        print(f"❌ Hata: {e}")
         trends = []
     finally:
-        driver.quit()  # Tarayıcıyı kapat
-    
+        driver.quit()
+
     return trends
+
 
 
 def save_trends_to_json():
