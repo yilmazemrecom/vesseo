@@ -86,12 +86,13 @@ async def show_trends(request: Request):
 
 
 async def update_trends():
-    """Her saat trendleri yeniler"""
+    """Her saat trendleri yeniler (thread içinde)"""
     while True:
         print("🔄 Trend verileri güncelleniyor...")
-        save_trends_to_json()  # Yeni trendleri JSON'a kaydet
+        await asyncio.to_thread(save_trends_to_json)  # Thread içinde çalıştır
         print("✅ Trendler başarıyla güncellendi!")
-        await asyncio.sleep(3600)  # 1 saat bekle (3600 saniye)
+        await asyncio.sleep(3600)  # 1 saat bekle
+
         
 @router.on_event("startup")
 async def start_trend_updater():
